@@ -165,42 +165,82 @@ class Api extends BaseController
             "object"  => $obj,
             "token"   => $this->request->getHeaderLine("token"),
         );
- 
+
         return $this->response->setJSON($data);
     }
 
-    public function getPages($parent_id = 0)
+    public function getPages()
     {
-        
-      
-        $query   = $this->db->query("SELECT id,parent_id, ilock, name, url, status, idefault, href, sorting FROM pages where parent_id = '$parent_id' and presence = 1 order by sorting ASC ");
-        $results = $query->getResult();
 
-        // $data = [
-        //     "results" => $query->getResult(),
-        //     "Token"=> $this->request->getHeaderLine("Token")
-        // ];
-       
+        $getVar = $this->request->getVar();
+        $id = $getVar['id'];
+        $parent_id =  $getVar['id'] ? model('Core')->select("parent_id", "pages", " id='$id' and presence = 1 ") : 0;
+        $queryPages   = $this->db->query("SELECT id,parent_id, ilock, name, url, status, idefault, href, sorting FROM pages where parent_id = '$parent_id' and presence = 1 order by sorting ASC ");
+        $queryPagesChild   = $this->db->query("SELECT id,parent_id, ilock, name, url, status, idefault, href, sorting FROM pages where parent_id = '$id' and presence = 1 order by sorting ASC ");
 
-        return $this->response->setJSON($results);
-    } 
+        $data = [
+            "getVar" => $getVar,
+            "parent_id" => $parent_id,
+            "pages" => $queryPages->getResult(),
+            "pagesChild" => $queryPagesChild->getResult(),
+            "Token" => $this->request->getHeaderLine("Token")
+        ];
+
+
+        return $this->response->setJSON($data);
+    }
+
     public function pagesUpdateSorting()
-    { 
-        $data = [ 
+    {
+        $data = [
             "post" => $this->request->getVar(),
-            "Token"=> $this->request->getHeaderLine("Token")
-        ]; 
-    
+            "Token" => $this->request->getHeaderLine("Token")
+        ];
+
         $i = 1;
         foreach ($this->request->getVar() as $row) {
             $this->db->table("pages")->update([
                 "sorting" => $i++,
                 "update_date" => date("Y-m-d H:i:s")
-            ], "id = '" . $row . "' "); 
+            ], "id = '" . $row . "' ");
         }
         return $this->response->setJSON($data);
     }
 
+    public function pagesInsertChild()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => false,
+        ];
+        if ($post) {
+            $this->db->table("pages")->insert([
+                "parent_id" => $post['id'],
+                "name" => "new Child",
+                "status" => 4,
+                "input_date" => date("Y-m-d H:i:s")
+            ]);
+        }
+        return $this->response->setJSON($data);
+    }
+    public function pagesInsertParent()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => false,
+        ];
+        if ($post) {
+            $this->db->table("pages")->insert([
+                "parent_id" => model("Core")->select("parent_id","pages","id='".$post['id']."'" ),
+                "name" => "new Child",
+                "status" => 4,
+                "input_date" => date("Y-m-d H:i:s")
+            ]);
+        }
+        return $this->response->setJSON($data);
+    }
     public function pagesUpdateStatus()
     {
         $json = file_get_contents('php://input');
@@ -208,18 +248,16 @@ class Api extends BaseController
         $data  = [
             "error" => false,
         ];
-        if($post){
-            $data = [ 
+        if ($post) {
+            $data = [
                 "post" => $post,
                 "getVar" => $this->request->getVar(),
-                "Token"=> $this->request->getHeaderLine("Token")
-            ]; 
+                "Token" => $this->request->getHeaderLine("Token")
+            ];
             $this->db->table("pages")->update([
                 "status" =>  $data['post']['status'],
                 "update_date" => date("Y-m-d H:i:s")
-            ], "id = '".$data['post']['id']."' "); 
-            
-           
+            ], "id = '" . $data['post']['id'] . "' ");
         }
         return $this->response->setJSON($data);
     }

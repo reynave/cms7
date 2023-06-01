@@ -3,33 +3,69 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
 </div>
 <div class="modal-body">
+    <div class="row">
+        <div class="mb-2">
+            <div [hidden]="!id || id=='0' ">
+                <a (click)="httpGet(parent_id);" [routerLink]="[ '/pages']" [queryParams]="{id: parent_id}">Backward</a>
+            </div>
+           
+        </div>
+    </div>
     <div class="row g-2">
         <div class="col-6">
             <ul class="sortable">
-                <li *ngFor="let x of pages"  data-id="{{x.id}}" class="border p-1 mb-1 status-{{x.status}}" [ngClass]="{'bg-light': x.status == '4'}">
+                <li *ngFor="let x of pages" data-id="{{x.id}}" class="border p-1 mb-1 status-{{x.status}}" [ngClass]="{'bg-light': x.status == '4'}">
                     <div class="row g-1">
-                        <div class="col-9">
-                            <a href="javascript:;">{{x.name}} [{{x.id}}]</a>
-                            <div>
-                                {{x.status}}
-                                <a href="javascript:;"> <small><i class="bi bi-link-45deg"></i> http://localhost/website/cms7/public/home/</small></a>
-                            </div>
+                        <div class="col-8 align-self-center">
+                            <a (click)="httpGet(x.id);" [routerLink]="[ '/pages']" [queryParams]="{id: x.id}">{{x.name}} [{{x.id}}]</a> <small class="" [hidden]="x.ilock != 1"><i class="bi bi-lock"></i> </small>
                         </div>
-                        <div class="col-3 text-end">
+                        <div class="col-4 text-end">
+                            <span class="me-1 text-warning" [hidden]="x.idefault != 1"> <i class="bi bi-star-fill"></i></span>
                             <a class="btn btn-sm btn-light me-1 handle"   data-table="pages"> <i class="bi bi-arrow-down-up"></i> </a>
                             <button class="btn btn-sm btn-light me-1" (click)="fnStatus(4, x);" *ngIf="x.status == 1"> <i class="bi bi-eye-fill"></i> </button>
                             <button class="btn btn-sm btn-light me-1" (click)="fnStatus(0, x);" *ngIf="x.status == 4"> <i class="bi bi-eye-slash"></i> </button>
                             <button class="btn btn-sm btn-light me-1"  (click)="fnStatus(1, x);" *ngIf="x.status == 0"> <i class="bi bi-eye"></i></button>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> </button>
                         </div>
+                        <div class="col-12">  
+                            <a href="javascript:;"> <small><i class="bi bi-link-45deg"></i> http://localhost/website/cms7/public/home/</small></a>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+            <div class="border p-1 mb-1" >
+                <button class="btn btn-sm" (click)="pagesInsertParent()">New Parent sibling_id : {{id}}</button>
+            </div>
+        </div>
+        <div class="col-6">
+          
+            <ul class="sortable" [hidden]="!id || id=='0' ">
+                <li *ngFor="let x of pagesChild" data-id="{{x.id}}" class="border p-1 mb-1 status-{{x.status}}" [ngClass]="{'bg-light': x.status == '4'}">
+                    <div class="row g-1">
+                        <div class="col-8 align-self-center">
+                            <a (click)="httpGet(x.id);" [routerLink]="[ '/pages']" [queryParams]="{id: x.id}">{{x.name}} [{{x.id}}]</a> <small class="" [hidden]="x.ilock != 1"><i class="bi bi-lock"></i> </small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <span class="me-1 text-warning" [hidden]="x.idefault != 1"> <i class="bi bi-star-fill"></i></span>
+                            <a class="btn btn-sm btn-light me-1 handle"   data-table="pages"> <i class="bi bi-arrow-down-up"></i> </a>
+                            <button class="btn btn-sm btn-light me-1" (click)="fnStatus(4, x,'pagesChild');" *ngIf="x.status == 1"> <i class="bi bi-eye-fill"></i> </button>
+                            <button class="btn btn-sm btn-light me-1" (click)="fnStatus(0, x,'pagesChild');" *ngIf="x.status == 4"> <i class="bi bi-eye-slash"></i> </button>
+                            <button class="btn btn-sm btn-light me-1"  (click)="fnStatus(1, x,'pagesChild');" *ngIf="x.status == 0"> <i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> </button>
+                        </div>
+                        <div class="col-12">  
+                            <a href="javascript:;"> <small><i class="bi bi-link-45deg"></i> http://localhost/website/cms7/public/home/</small></a>
+                        </div>
 
                     </div>
                 </li>
             </ul>
 
-        </div>
-        <div class="col-6">
-             
+
+            <div class="border p-1 mb-1" [hidden]="!id || id=='0' ">
+                <button class="btn btn-sm" (click)="pagesInsertChild()">New Child parend_id : {{id}}</button>
+            </div>
         </div>
     </div>
 </div>

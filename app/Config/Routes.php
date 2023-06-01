@@ -40,6 +40,8 @@ $routes->post('api/getData', 'Api::getData');
 $routes->get('api/getPages', 'Api::getPages');
 $routes->post('api/pagesUpdateSorting', 'Api::pagesUpdateSorting');
 $routes->post('api/pagesUpdateStatus', 'Api::pagesUpdateStatus');
+$routes->post('api/pagesInsertChild', 'Api::pagesInsertChild');
+$routes->post('api/pagesInsertParent', 'Api::pagesInsertParent');
 
 $routes->get('api/login', 'Api::login');
 $routes->get('config.app', 'Home::config');
