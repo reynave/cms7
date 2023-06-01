@@ -37,8 +37,14 @@ $routes->post('api/update', 'Api::update');
 $routes->post('api/insert', 'Api::insert');
 $routes->post('api/getData', 'Api::getData');
 
+$routes->get('api/getPages', 'Api::getPages');
+$routes->post('api/pagesUpdateSorting', 'Api::pagesUpdateSorting');
+$routes->post('api/pagesUpdateStatus', 'Api::pagesUpdateStatus');
+
 $routes->get('api/login', 'Api::login');
-$routes->get('thumb.aspx', 'Home::thumb');
+$routes->get('config.app', 'Home::config');
+
+$routes->get('thumb.app', 'Home::thumb');
 
 $routes->get('/(:any)', 'Home::index/$1');
 

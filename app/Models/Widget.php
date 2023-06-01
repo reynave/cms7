@@ -57,14 +57,13 @@ class Widget extends Core
                     "h5" => " data-id='" .$row['id'] . "' data-table='widget' data-column='h5'",
                     "h6" => " data-id='" .$row['id'] . "' data-table='widget' data-column='h6'",
                     "href" => " data-id='" .$row['id'] . "' data-table='widget' data-column='href'",
-                    "content" => " data-id='" .$row['id'] . "' data-table='widget' data-column='content'",
-                    
+                    "content" => " data-id='" .$row['id'] . "' data-table='widget' data-column='content'", 
                 ], 
-                "action" => "
+                "action" => $this->login == true ? "
                     <span class='handle' data-id='" . $row['id'] . "' data-table='widget'><i class='bi bi-arrows-move'></i></span>
                     <button type='button' class='cms7btn  parentModal' data-id='" . $row['id'] . "' data-table='widget' >Detail</button>
                     <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='widget'>Delete</button>
-                ",
+                " : "",
             ]));
         }
 
@@ -76,8 +75,8 @@ class Widget extends Core
         if($section == ""){
             return "<span class='cms7Warning'>Require section name!!</span>";
         }else{ 
-            return "<button type='button' class='cms7btn widget_insert' data-themes='".self::iniCms()['themes']."' 
-            data-table='widget' data-section='$section' data-itype='widget'>Add $section</button>"; 
+            return $this->login == true ? "<button type='button' class='cms7btn widget_insert' data-themes='".self::iniCms()['themes']."' 
+            data-table='widget' data-section='$section' data-itype='widget'>Add $section</button>" :""; 
         }
 
     }

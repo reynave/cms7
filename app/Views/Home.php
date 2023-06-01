@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php echo $core['metadata'];?>
+    <?php echo $core['metadata']; ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-   
-    
-    
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>./../admin/assets/plugin/jquery-ui-1.13.2.custom/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>./../admin/assets/style/cms7.css">
-    
-   
+
+
+    <?php if ($init['login'] === true) { ?>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>admin/assets/plugin/jquery-ui-1.13.2.custom/jquery-ui.theme.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>admin/assets/styles/cms7.css">
+    <?php } ?>
+
     <style>
         body {
-            margin-top: 40px;
-        } 
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -27,6 +27,24 @@
 
     <div class="container ">
         <div class="row">
+            <div class="col-12">
+                <?php 
+                echo $_SERVER['HTTP_SEC_FETCH_DEST']."<br>";  
+                
+                if( isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe' ) {
+                    echo "child";
+                }else{
+                    echo "parent";
+                }
+                ?>
+            </div>
+            <div class="col-12">
+
+                <div class="my-1">
+                    login : <?php echo $init['login'] ?>
+                </div>
+                
+            </div>
             <div class="col-8">
                 <div class="mb-3">
                     <div class="text" data-label="headline 1" <?php echo $core['content']['data']['h1'] ?>><?php echo $core['content']['h1'] ?></div>
@@ -111,27 +129,30 @@
             ?>
         </div>
 
-         <?php echo model('Widget')->add("haha");?>
+        <?php echo model('Widget')->add("haha"); ?>
 
     </div>
-    <script src="https://cdn.tiny.cloud/1/cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
+    <?php if ($init['login'] === true) { ?>
+        <script src="https://cdn.tiny.cloud/1/cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-    <div class="cms7LoadingFixed">
-        <div>
-            loading
+        <div class="cms7LoadingFixed">
+            <div>
+                loading
+            </div>
         </div>
-    </div>
-    
-    <script>
-        let base_url = "<?php echo base_url() ?>";
-        let token = "23fvsduhbxfgjdhjt78sd.7fgnxd6q346aegs6uadfhu.q3452gzd5"; 
-    </script>
-     <script src="<?php echo base_url(); ?>./../admin/assets/js/system.js"></script>
-    <script src="http://localhost:35729/livereload.js"></script>
+        <script>
+            let base_url = "<?php echo base_url() ?>";
+            let token = "23fvsduhbxfgjdhjt78sd.7fgnxd6q346aegs6uadfhu.q3452gzd5";
+        </script>
+        <script src="<?php echo base_url(); ?>admin/assets/js/system.js"></script>
+    <?php } 
+    echo (ENVIRONMENT == 'development') ? '<script src="http://localhost:35729/livereload.js"></script>' : "";   ?>
+
+
 </body>
 
 </html>

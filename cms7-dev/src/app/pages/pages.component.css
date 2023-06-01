@@ -1,0 +1,26 @@
+small{
+    font-size: 0.8rem;
+}
+
+.status-0 > *{
+    opacity: 0.2;
+    background-color: #fff;
+}
+
+.status-1 {
+    opacity: 1;
+    background-color: #fff;
+}
+
+.status-4 > *{
+    opacity: 0.8; 
+    background-color: #fff;
+}
+.sortable{
+    padding-left: 0px;
+}
+.sortable li{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}

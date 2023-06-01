@@ -32,9 +32,14 @@ class Core extends Model
             self::select("id", "content", "pages_id = '" . $this->id . "' and presence = 1 and status != 0 order by sorting ASC");
     }
 
+    function set_login($val = false)
+    {
+        $this->login = $val;
+        return  $this->login;
+    }
+
     function iniCms()
     {
-        $this->login = true;
         $this->themes = self::table()  == '404' ? '404' : self::select("themes", "pages", "id='" . $this->id . "'");
         $data = array(
             "login" => $this->login,
@@ -49,6 +54,7 @@ class Core extends Model
 
     function cms()
     {
+
         $default = array(
             "id" => null,
             "pages_id" =>  null,
@@ -82,119 +88,121 @@ class Core extends Model
             "widget" => [],
         );
 
-
         $select_content = "id, pages_id, name, h1, h2, h3, h4,h5, h6, status, sorting, publish_date, url ";
         $content = !$this->content_id ? [] : $this->db->query("SELECT   $select_content, content  FROM content WHERE status != 0 and presence = 1 and id = " . $this->content_id)->getResultArray()[0];
 
         $contentData = array(
-            "name" => "!! please use Modal Detail !!",
-            "h1" => " data-id='" . $this->content_id . "' data-table='content' data-column='h1'  ",
-            "h2" => " data-id='" . $this->content_id . "' data-table='content' data-column='h2'  ",
-            "h3" => " data-id='" . $this->content_id . "' data-table='content' data-column='h3'  ",
-            "h4" => " data-id='" . $this->content_id . "' data-table='content' data-column='h4'  ",
-            "h5" => " data-id='" . $this->content_id . "' data-table='content' data-column='h5'  ",
-            "h6" => " data-id='" . $this->content_id . "' data-table='content' data-column='h6'  ",
-            "publish_date" => " data-id='" . $this->content_id . "' data-table='content' data-column='publish_date'  ",
-            "metadata_description" => " data-id='" . $this->content_id . "' data-table='content' data-column='metadata_description'  ",
-            "metadata_keywords" => " data-id='" . $this->content_id . "' data-table='content' data-column='metadata_keywords'  ",
-
-            "content" => " data-id='" . $this->content_id . "' data-table='content' data-column='content'  ",
+            "name" => $this->login == true ? "!! please use Modal Detail !!" : "",
+            "h1" =>  $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h1'  " : "",
+            "h2" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h2'  " : "",
+            "h3" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h3'  " : "",
+            "h4" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h4'  " : "",
+            "h5" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h5'  " : "",
+            "h6" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='h6'  " : "",
+            "publish_date" => $this->login == true ?  " data-id='" . $this->content_id . "' data-table='content' data-column='publish_date'  " : "",
+            "metadata_description" => $this->login == true ?  " data-id='" . $this->content_id . "' data-table='content' data-column='metadata_description'  " : "",
+            "metadata_keywords" => $this->login == true ?  " data-id='" . $this->content_id . "' data-table='content' data-column='metadata_keywords'  " : "",
+            "content" => $this->login == true ? " data-id='" . $this->content_id . "' data-table='content' data-column='content'  " : "",
         );
 
-        $galleries = [];
-        $query   = $this->db->query("SELECT * FROM widget WHERE itype = 'galleries' and  status != 0 and presence = 1 and section = '" . $this->content_id . "' order by sorting ASC");
-        $results = $query->getResultArray();
-        $i = 1;
-        foreach ($results as $row) {
-            $temp = [
-                "id" => $row['id'],
-                "section" => $row['section'],
-                "h1" =>  $row['h1'],
-                "h2" =>  $row['h2'],
-                "h3" =>  $row['h3'],
-                "h4" =>  $row['h4'],
-                "h5" =>  $row['h5'],
-                "h6" =>  $row['h6'],
-                "thumb" => "",
-                "img" =>  $row['img'],
-                "content" =>  $row['content'],
-                "i" => $i++,
-                "data" => [
-                    "h1" => " data-id='" . $this->content_id . "' data-table='content' data-column='h1'  ",
-                    "h2" => " data-id='" . $this->content_id . "' data-table='content' data-column='h2'  ",
-                    "h3" => " data-id='" . $this->content_id . "' data-table='content' data-column='h3'  ",
-                    "h4" => " data-id='" . $this->content_id . "' data-table='content' data-column='h4'  ",
-                    "h5" => " data-id='" . $this->content_id . "' data-table='content' data-column='h5'  ",
-                    "h6" => " data-id='" . $this->content_id . "' data-table='content' data-column='h6'  ",
-                ],
-                "action" => "
-                    <span class='handle' data-id='" . $row['id'] . "' data-table='widget'><i class='bi bi-arrows-move'></i></span>
-                    <button type='button' class='cms7btn  parentModal' data-id='" . $row['id'] . "' data-table='widget'>Detail</button>
-                    <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='widget'>Delete</button>
-                "
+        if ($this->content_id) {
 
-            ];
-            array_push($galleries, $temp);
+
+            $galleries = [];
+            $query   = $this->db->query("SELECT * FROM widget WHERE itype = 'galleries' and  status != 0 and presence = 1 and section = '" . $this->content_id . "' order by sorting ASC");
+            $results = $query->getResultArray();
+            $i = 1;
+            foreach ($results as $row) {
+                $temp = [
+                    "id" => $row['id'],
+                    "section" => $row['section'],
+                    "h1" =>  $row['h1'],
+                    "h2" =>  $row['h2'],
+                    "h3" =>  $row['h3'],
+                    "h4" =>  $row['h4'],
+                    "h5" =>  $row['h5'],
+                    "h6" =>  $row['h6'],
+                    "thumb" => "",
+                    "img" =>  $row['img'],
+                    "content" =>  $row['content'],
+                    "i" => $i++,
+                    "data" => [
+                        "h1" => " data-id='" . $this->content_id . "' data-table='content' data-column='h1'  ",
+                        "h2" => " data-id='" . $this->content_id . "' data-table='content' data-column='h2'  ",
+                        "h3" => " data-id='" . $this->content_id . "' data-table='content' data-column='h3'  ",
+                        "h4" => " data-id='" . $this->content_id . "' data-table='content' data-column='h4'  ",
+                        "h5" => " data-id='" . $this->content_id . "' data-table='content' data-column='h5'  ",
+                        "h6" => " data-id='" . $this->content_id . "' data-table='content' data-column='h6'  ",
+                    ],
+                    "action" =>  $this->login == true ? "
+                        <span class='handle' data-id='" . $row['id'] . "' data-table='widget'><i class='bi bi-arrows-move'></i></span>
+                        <button type='button' class='cms7btn  parentModal' data-id='" . $row['id'] . "' data-table='widget'>Detail</button>
+                        <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='widget'>Delete</button>
+                    " : "" 
+                ];
+                array_push($galleries, $temp);
+            }
+
+
+            $list_query = $this->db->query("SELECT $select_content  FROM content WHERE status != 0 and presence = 1 and id != '" . $this->content_id . "' and  pages_id = " . $this->id . " order by sorting ASC LIMIT 50");
+            $results =  $list_query->getResultArray();
+            $list = [];
+            foreach ($results as $row) {
+                array_push($list,  array_merge($row, [
+                    "url" => base_url() . self::select("url", "pages", "id=" . $row['pages_id']) . '/' . $row['url'],
+                    "action" =>  $this->login == true ? "
+                        <span class='handle' data-id='" . $row['id'] . "' data-table='content'><i class='bi bi-arrows-move'></i></span>
+                        <button type='button' class='cms7btn  parentModal' data-id='" . $row['id'] . "' data-table='content'>Detail</button>
+                        <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='content'>Delete</button>
+                    " : "",
+                ]));
+            }
+
+            $widget_query = $this->db->query("SELECT * FROM widget WHERE itype = 'widget' and  status != 0 and presence = 1 and section = '" . $this->content_id . "' order by sorting ASC ")->getResultArray();
+            $widget = [];
+            foreach ($widget_query as $row) {
+                array_push($widget,  array_merge($row, [
+                    "data" => $this->login == true ? array(
+                        "h1" =>  " data-id='" . $this->content_id . "' data-table='widget' data-column='h1'  ",
+                        "h2" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h2'  ",
+                        "h3" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h3'  ",
+                        "h4" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h4'  ",
+                        "h5" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h5'  ",
+                        "h6" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h6'  ",
+                        "href" => " data-id='" . $this->content_id . "' data-table='widget' data-column='href'  ",
+                        "content" => " data-id='" . $this->content_id . "' data-table='widget' data-column='content'  ",
+                    ) : [],
+                    "action" => $this->login == true ? "
+                        <span class='handle' data-id='" . $row['id'] . "' data-table='widget'><i class='bi bi-arrows-move'></i></span>
+                        <button type='button' class='cms7btn parentModal' data-id='" . $row['id'] . "' data-table='widget'>Detail</button>
+                        <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='widget'>Delete</button>
+                    " : "",
+                ]));
+            }
         }
-
-
-        $list_query = $this->db->query("SELECT $select_content  FROM content WHERE status != 0 and presence = 1 and id != '" . $this->content_id . "' and  pages_id = " . $this->id . " order by sorting ASC LIMIT 50")->getResultArray();
-        $list = [];
-        foreach ($list_query as $row) {
-            array_push($list,  array_merge($row, [
-                "url" => base_url() . self::select("url", "pages", "id=" . $row['pages_id']) . '/' . $row['url'],
-                "action" => "
-                    <span class='handle' data-id='" . $row['id'] . "' data-table='content'><i class='bi bi-arrows-move'></i></span>
-                    <button type='button' class='cms7btn  parentModal' data-id='" . $row['id'] . "' data-table='content'>Detail</button>
-                    <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='content'>Delete</button>
-                ",
-            ]));
-        }
-
-        $widget_query = $this->db->query("SELECT * FROM widget WHERE itype = 'widget' and  status != 0 and presence = 1 and section = '" . $this->content_id . "' order by sorting ASC ")->getResultArray();
-        $widget = [];
-        foreach ($widget_query as $row) {
-            array_push($widget,  array_merge($row, [
-                "data" => array(
-                    "h1" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h1'  ",
-                    "h2" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h2'  ",
-                    "h3" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h3'  ",
-                    "h4" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h4'  ",
-                    "h5" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h5'  ",
-                    "h6" => " data-id='" . $this->content_id . "' data-table='widget' data-column='h6'  ",
-                    "href" => " data-id='" . $this->content_id . "' data-table='widget' data-column='href'  ",
-                    "content" => " data-id='" . $this->content_id . "' data-table='widget' data-column='content'  ",
-                ),
-                "action" => "
-                    <span class='handle' data-id='" . $row['id'] . "' data-table='widget'><i class='bi bi-arrows-move'></i></span>
-                    <button type='button' class='cms7btn parentModal' data-id='" . $row['id'] . "' data-table='widget'>Detail</button>
-                    <button type='button' class='cms7btn  delete' data-id='" . $row['id'] . "' data-table='widget'>Delete</button>
-                ",
-            ]));
-        }
-
         $query =  $this->db->query("SELECT id, parent_id, name FROM pages WHERE presence = 1");
         $pages = $query->getResultArray();
 
         $data = array(
+            "login" => $this->login,
             "path"      => $this->path,
             "id"        =>  $this->id,
             "content_id" =>  $this->content_id,
-            "table"     => self::table(), 
+            "table"     => self::table(),
             "pages"     => self::buildTree($pages),
             "content" => $this->content_id ? array_merge($content, [
                 "data" => $contentData,
                 "list" => $list,
                 "widget"    => $widget,
-                "addWidget"    => "<button type='button' class='cms7btn widget_insert' data-table='widget' data-themes='' data-itype='widget' data-section='" . $this->content_id . "'
-                data-img='https://dummyimage.com/600x400/30a2ff/ffffff.jpg&text=dummy+images'>add Widget</button>",
-                
+                "addWidget"    => $this->login == true ? "<button type='button' class='cms7btn widget_insert' data-table='widget' data-themes='' data-itype='widget' data-section='" . $this->content_id . "'
+                data-img='https://dummyimage.com/600x400/30a2ff/ffffff.jpg&text=dummy+images'>add Widget</button>" : "",
+
                 "galleries" => $galleries,
-                "addGalleries" => "<button type='button' class='cms7btn insert' data-table='widget' data-itype='galleries' data-section='" . $this->content_id . "'
-                    data-img='https://dummyimage.com/600x400/30a2ff/ffffff.jpg&text=dummy+images'>add galleries</button>",
+                "addGalleries" =>  $this->login == true ? "<button type='button' class='cms7btn insert' data-table='widget' data-itype='galleries' data-section='" . $this->content_id . "'
+                    data-img='https://dummyimage.com/600x400/30a2ff/ffffff.jpg&text=dummy+images'>add galleries</button>" : "",
 
             ]) : $default,
-            "insertContent" => '<button type="button" class="cms7btn insert" data-table="content" data-pages_id="' . $this->id . '">Add Content</button>',
+            "insertContent" => $this->login == true ? '<button type="button" class="cms7btn insert" data-table="content" data-pages_id="' . $this->id . '">Add Content</button>' : "",
             "metadata" => self::metadata(),
         );
         return $data;
@@ -278,7 +286,7 @@ class Core extends Model
 
         return $data;
     }
-    
+
     function domain()
     {
         $array = array("http://", "https://");

@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+iframe {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: calc(100% - 100px);
+    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+header {
+    background: var(--main-color-1);
+    color: var(--light-color-1);
+}
+
+a{
+    text-decoration: none;
+}
