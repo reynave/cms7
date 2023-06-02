@@ -16,11 +16,13 @@
             <ul class="sortable">
                 <li *ngFor="let x of pages" data-id="{{x.id}}" class="border p-1 mb-1 status-{{x.status}}" [ngClass]="{'bg-light': x.status == '4'}">
                     <div class="row g-1">
-                        <div class="col-8 align-self-center">
-                            <a (click)="httpGet(x.id);" [routerLink]="[ '/pages']" [queryParams]="{id: x.id}">{{x.name}} [{{x.id}}]</a> <small class="" [hidden]="x.ilock != 1"><i class="bi bi-lock"></i> </small>
+                        <div class="col-7 align-self-center">
+                            <a (click)="httpGet(x.id);" [routerLink]="[ '/pages']" [queryParams]="{id: x.id}">{{x.name}} [{{x.id}}]</a> 
+                            <small class="" [hidden]="x.ilock != 1"><i class="bi bi-lock"></i> </small> 
                         </div>
-                        <div class="col-4 text-end">
+                        <div class="col-5 text-end">
                             <span class="me-1 text-warning" [hidden]="x.idefault != 1"> <i class="bi bi-star-fill"></i></span>
+                            <a [routerLink]="[ '/pages', x.id ]" class="btn btn-sm btn-light me-1"><i class="bi bi-pencil-square"></i></a>
                             <a class="btn btn-sm btn-light me-1 handle"   data-table="pages"> <i class="bi bi-arrow-down-up"></i> </a>
                             <button class="btn btn-sm btn-light me-1" (click)="fnStatus(4, x);" *ngIf="x.status == 1"> <i class="bi bi-eye-fill"></i> </button>
                             <button class="btn btn-sm btn-light me-1" (click)="fnStatus(0, x);" *ngIf="x.status == 4"> <i class="bi bi-eye-slash"></i> </button>
@@ -68,6 +70,8 @@
             </div>
         </div>
     </div>
+
+    <a (click)="testVPN()">testVPN();</a>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>

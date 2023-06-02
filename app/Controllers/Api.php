@@ -224,6 +224,7 @@ class Api extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
     public function pagesInsertParent()
     {
         $json = file_get_contents('php://input');
@@ -233,7 +234,7 @@ class Api extends BaseController
         ];
         if ($post) {
             $this->db->table("pages")->insert([
-                "parent_id" => model("Core")->select("parent_id","pages","id='".$post['id']."'" ),
+                "parent_id" => model("Core")->select("parent_id", "pages", "id='" . $post['id'] . "'"),
                 "name" => "new Child",
                 "status" => 4,
                 "input_date" => date("Y-m-d H:i:s")
@@ -241,6 +242,7 @@ class Api extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
     public function pagesUpdateStatus()
     {
         $json = file_get_contents('php://input');
@@ -260,5 +262,20 @@ class Api extends BaseController
             ], "id = '" . $data['post']['id'] . "' ");
         }
         return $this->response->setJSON($data);
+    }
+
+    public function pagesDetail()
+    {
+        $path    = './../app/views';
+        $files = scandir($path);
+        // print_r($files);
+        $themes = [];
+        foreach ($files as $row) {  
+            if ($row != "." && $row != ".." && count(explode(".php", $row)) > 1) { 
+                array_push($themes, $row);
+            }
+        }
+
+        print_r( $themes);
     }
 }

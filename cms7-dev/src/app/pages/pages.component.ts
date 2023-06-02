@@ -167,4 +167,23 @@ export class PagesComponent implements OnInit {
       }
     )
   }
+
+  testVPN(){
+    let url = "https://systemapk.bsfar.com:41021/test.php";
+
+    this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Token': "123",
+      })
+    }).subscribe(
+      data => {
+        console.log(data);
+        //  this.httpGet();
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
 }

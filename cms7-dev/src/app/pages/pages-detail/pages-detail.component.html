@@ -1,1 +1,43 @@
-<p>pages-detail works!</p>
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title"><strong>Pages Detail</strong></div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<form (ngSubmit)="onSubmit()" #myForm="ngForm">
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-6">
+                <div class="mb-2">
+                    <label for="name" class="form-label">Parent</label>
+                    <div class="form-control form-control-sm bg-light"> gagag</div>
+                </div>
+                <div class="mb-2">
+                    <label for="name" class="form-label">Page Name*</label>
+                    <input type="text" (keyup)="sanitizeString()" class="form-control form-control-sm" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel">
+                    <div [hidden]="name.valid || name.pristine" class="form-text text-danger">Pages Name is required</div>
+                </div>
+
+                <div class="mb-2">
+                    <label for="name" class="form-label">Url*</label>
+                    <input type="text" class="form-control form-control-sm" id="url" required [(ngModel)]="model.url" name="url" #url="ngModel">
+                    <div [hidden]="url.valid || url.pristine" class="form-text text-danger">Url for SEO </div>
+                </div>
+                <div class="mb-2">
+                    <label for="name" class="form-label">themes</label>
+                    <input type="text" class="form-control form-control-sm" id="themes" required [(ngModel)]="model.themes" name="themes" #themes="ngModel">
+                </div>
+                {{model |json}}
+            </div>
+
+            <div class="col-6">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success" [disabled]="!myForm.form.valid">Submit</button>
+        <button type="button" class="btn btn-outline-dark" (click)="close()">Save</button>
+    </div>
+
+</form>
