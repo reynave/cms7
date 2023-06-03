@@ -5,39 +5,81 @@
 <form (ngSubmit)="onSubmit()" #myForm="ngForm">
 
     <div class="modal-body">
+
         <div class="row">
+            <div class="col-12">
+                <a (click)="back()" class="btn btn-primary btn-sm">Back</a>
+            </div>
             <div class="col-6">
                 <div class="mb-2">
-                    <label for="name" class="form-label">Parent</label>
-                    <div class="form-control form-control-sm bg-light"> gagag</div>
+                    <label class="form-label">Parent Page</label>
+                    <div class="form-control form-control-sm bg-light"> {{parent.name}}</div>
                 </div>
                 <div class="mb-2">
                     <label for="name" class="form-label">Page Name*</label>
-                    <input type="text" (keyup)="sanitizeString()" class="form-control form-control-sm" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel">
+                    <input type="text" (keyup)="sanitizeString()" (change)="updateTitle();" class="form-control form-control-sm" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel">
                     <div [hidden]="name.valid || name.pristine" class="form-text text-danger">Pages Name is required</div>
                 </div>
 
+
+
                 <div class="mb-2">
-                    <label for="name" class="form-label">Url*</label>
-                    <input type="text" class="form-control form-control-sm" id="url" required [(ngModel)]="model.url" name="url" #url="ngModel">
-                    <div [hidden]="url.valid || url.pristine" class="form-text text-danger">Url for SEO </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" [(ngModel)]="model.externalUrl" name="externalUrl">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Default to {{model.externalUrl ? "External Href" : "Url" }} </label>
+                    </div>
+
+                    <span [hidden]="model.externalUrl">
+                        <input type="text" class="form-control form-control-sm" id="url" required [(ngModel)]="model.url" name="url" #url="ngModel">
+                        <div [hidden]="url.valid || url.pristine" class="form-text text-danger">Url for SEO </div>
+                    </span>
+
+                    <span [hidden]="!model.externalUrl">
+                        <input type="text" class="form-control form-control-sm" id="href" [(ngModel)]="model.href" name="href" placeholder="https://">
+                    </span>
                 </div>
+
                 <div class="mb-2">
-                    <label for="name" class="form-label">themes</label>
-                    <input type="text" class="form-control form-control-sm" id="themes" required [(ngModel)]="model.themes" name="themes" #themes="ngModel">
+                    <label for="themes" class="form-label">Themes*</label>
+                    <select class="form-control form-control-sm" id="themes" required [(ngModel)]="model.themes" id="themes" name="themes" #themes="ngModel">
+                        <option *ngFor="let x of selectThemes" [value]="x">{{x}}</option>
+                    </select>
+                    <div [hidden]="themes.valid || themes.pristine" class="form-text text-danger">Pages Name is required</div>
+
                 </div>
                 {{model |json}}
             </div>
 
             <div class="col-6">
+                <div class="mb-2">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control form-control-sm" id="title" required [(ngModel)]="model.title" name="title" #title="ngModel">
+                    <div [hidden]="title.valid || title.pristine" class="form-text text-danger">Title Name is required</div>
+                </div>
+                <div class="mb-2">
+                    <label for="metadata_description" class="form-label">Metadata Description</label>
+                    <textarea class="form-control form-control-sm" id="metadata_description" [(ngModel)]="model.metadata_description" name="metadata_description"></textarea>
+                </div>
+                <div class="mb-2">
+                    <label for="metadata_keywords" class="form-label">Metadata Keywords</label>
+                    <textarea class="form-control form-control-sm" id="metadata_keywords" [(ngModel)]="model.metadata_keywords" name="metadata_keywords"></textarea>
+                </div>
 
+                <div class="mb-2">
+                    <label for="img" class="form-label">Images</label>
+                   <div [hidden]="!this.model.img">
+                    <img [src]="this.model.img"  class="border p-1 bg-light w-100 mb-1">
+                   </div>
+                    <input type="text" id="img" class="form-control form-control-sm" id="img"  [(ngModel)]="model.img" name="img" #img="ngModel" placeholder="Url Images">
+              
+                </div>
             </div>
         </div>
 
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-success" [disabled]="!myForm.form.valid">Submit</button>
-        <button type="button" class="btn btn-outline-dark" (click)="close()">Save</button>
+        <button type="submit" class="btn btn-success mx-1" [disabled]="!myForm.form.valid">Submit</button>
+        <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>
     </div>
 
 </form>

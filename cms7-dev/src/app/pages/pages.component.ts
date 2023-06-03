@@ -127,6 +127,26 @@ export class PagesComponent implements OnInit {
     )
   }
 
+  pagesSetDefault(id : string){
+  
+    const data= {
+      id :id,
+    }
+    console.log(data);
+    this.http.post<any>(this.api + "pagesSetDefault", data, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Token': "123",
+      })
+    }).subscribe(
+      data => { 
+        this.httpGet(this.id);
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
 
   pagesInsertChild(){
     const data= {

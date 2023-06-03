@@ -24,3 +24,7 @@ small{
     margin: 0px;
     padding: 0px;
 }
+
+.active{
+    font-weight: bold;
+}

@@ -207,6 +207,30 @@ class Api extends BaseController
         return $this->response->setJSON($data);
     }
 
+    public function pagesSetDefault()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+        ];
+        if ($post) {
+            $data = [
+                "post" => $post,
+                "getVar" => $this->request->getVar(),
+                "Token" => $this->request->getHeaderLine("Token")
+            ];
+            $this->db->table("pages")->update([
+                "idefault" => 0,
+                "update_date" => date("Y-m-d H:i:s")
+            ]);
+            $this->db->table("pages")->update([
+                "idefault" => 1,
+                "update_date" => date("Y-m-d H:i:s")
+            ], "id = '" . $data['post']['id'] . "' ");
+        }
+        return $this->response->setJSON($data);
+    }
     public function pagesInsertChild()
     {
         $json = file_get_contents('php://input');
@@ -248,7 +272,7 @@ class Api extends BaseController
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data  = [
-            "error" => false,
+            "error" => true,
         ];
         if ($post) {
             $data = [
@@ -270,21 +294,60 @@ class Api extends BaseController
         $files = scandir($path);
         // print_r($files);
         $themes = [];
-        foreach ($files as $row) {  
-            if ($row != "404.php" && $row != "." && $row != ".." && count(explode(".php", $row)) > 1) { 
+        foreach ($files as $row) {
+            if ($row != "404.php" && $row != "." && $row != ".." && count(explode(".php", $row)) > 1) {
                 array_push($themes, $row);
             }
         }
+        $parend_id = 0;
         $get = $this->request->getVar();
-        $queryPages   = $this->db->query("SELECT  * FROM pages where id = '".$get['id']."' and presence = 1 order by sorting ASC ");
-      
+        $queryPages   = $this->db->query("SELECT  * FROM pages where id = '" . $get['id'] . "' and presence = 1 order by sorting ASC ");
+        if (count($queryPages->getResult()) > 0) {
+            $parend_id = $queryPages->getResult()[0];
+            $parend_id = $parend_id->parent_id;
+        }
+
         $data = [
+            "parent" => [
+                "id" => $parend_id,
+                "name" => model("Core")->select("name", "pages", "id= '$parend_id' "),
+            ],
             "item" => count($queryPages->getResult()) ? $queryPages->getResult()[0] : null,
             "themes" => $themes,
             "getVar" => $this->request->getVar(),
             "Token" => $this->request->getHeaderLine("Token")
         ];
-        return $this->response->setJSON($data); 
-       
+        return $this->response->setJSON($data);
+    }
+
+    public function pagesDetailUpdate()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+        ];
+        if ($post) {
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];
+
+            $this->db->table("pages")->update([
+                "name"      => $post['model']['name'],
+                "themes"    => $post['model']['themes'],
+                "url"       => $post['model']['url'],
+                "href"      => $post['model']['href'],
+                "metadata_description"  => $post['model']['metadata_description'],
+                "metadata_keywords"     => $post['model']['metadata_keywords'],
+                "title"                 => $post['model']['title'],
+                "img"                 => $post['model']['img'],
+
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['id'] . "' ");
+        }
+
+
+        return $this->response->setJSON($data);
     }
 }

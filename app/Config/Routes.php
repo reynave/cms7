@@ -42,7 +42,10 @@ $routes->post('api/pagesUpdateSorting', 'Api::pagesUpdateSorting');
 $routes->post('api/pagesUpdateStatus', 'Api::pagesUpdateStatus');
 $routes->post('api/pagesInsertChild', 'Api::pagesInsertChild');
 $routes->post('api/pagesInsertParent', 'Api::pagesInsertParent');
+$routes->post('api/pagesSetDefault', 'Api::pagesSetDefault');
+
 $routes->get('api/pagesDetail', 'Api::pagesDetail');
+$routes->post('api/pagesDetailUpdate', 'Api::pagesDetailUpdate');
 
 $routes->get('api/login', 'Api::login');
 $routes->get('config.app', 'Home::config');
