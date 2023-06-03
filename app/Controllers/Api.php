@@ -271,11 +271,20 @@ class Api extends BaseController
         // print_r($files);
         $themes = [];
         foreach ($files as $row) {  
-            if ($row != "." && $row != ".." && count(explode(".php", $row)) > 1) { 
+            if ($row != "404.php" && $row != "." && $row != ".." && count(explode(".php", $row)) > 1) { 
                 array_push($themes, $row);
             }
         }
-
-        print_r( $themes);
+        $get = $this->request->getVar();
+        $queryPages   = $this->db->query("SELECT  * FROM pages where id = '".$get['id']."' and presence = 1 order by sorting ASC ");
+      
+        $data = [
+            "item" => count($queryPages->getResult()) ? $queryPages->getResult()[0] : null,
+            "themes" => $themes,
+            "getVar" => $this->request->getVar(),
+            "Token" => $this->request->getHeaderLine("Token")
+        ];
+        return $this->response->setJSON($data); 
+       
     }
 }
