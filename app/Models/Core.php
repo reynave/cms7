@@ -308,4 +308,19 @@ class Core extends Model
 
         return $tree;
     }
+
+    function deleteNode($parentId) {
+  
+        
+        // Mengupdate nilai presence menjadi 0 pada parent yang dihapus
+        $this->db->table('pages')->where('id', $parentId)->update(['presence' => 0]);
+    
+        // Mengambil semua child yang terkait dengan parent yang dihapus
+        $children = $this->db->table('pages')->where('parent_id', $parentId)->get()->getResultArray();
+    
+        // Menghapus atau mengupdate presence pada setiap child secara rekursif
+        foreach ($children as $child) {
+            self::deleteNode($child['id']);
+        }
+    }
 }

@@ -12,7 +12,25 @@ iframe {
     padding: 0;
     overflow: hidden;
 }
-
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #fff; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #f4f4f4; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #DDE6ED; 
+  }
 header {
     background: var(--main-color-1);
     color: var(--light-color-1);

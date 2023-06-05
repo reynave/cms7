@@ -66,10 +66,13 @@
                 </div>
 
                 <div class="mb-2">
-                    <label for="img" class="form-label">Images</label>
+                    <label for="img" class="form-label">Images {{httpNote}}</label>
                    <div [hidden]="!this.model.img">
                     <img [src]="this.model.img"  class="border p-1 bg-light w-100 mb-1">
                    </div>
+                  
+                   <input type="file" class="form-control form-control-sm mb-1" (change)="onFileSelected($event)" >
+
                     <input type="text" id="img" class="form-control form-control-sm" id="img"  [(ngModel)]="model.img" name="img" #img="ngModel" placeholder="Url Images">
               
                 </div>

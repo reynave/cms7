@@ -28,3 +28,8 @@ small{
 .active{
     font-weight: bold;
 }
+
+.area{
+    height: calc(90%);
+    overflow-y: auto;
+}

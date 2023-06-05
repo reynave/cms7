@@ -11,6 +11,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PagesComponent } from './pages/pages.component';
 import { PagesDetailComponent } from './pages/pages-detail/pages-detail.component';
+import { WidgetComponent } from './widget/widget.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { PagesDetailComponent } from './pages/pages-detail/pages-detail.componen
     HomeComponent,
     NotfoundComponent,
     PagesComponent,
-    PagesDetailComponent
+    PagesDetailComponent,
+    WidgetComponent
   ],
   imports: [
     BrowserModule,

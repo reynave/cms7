@@ -3,11 +3,11 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\Model;
+use CodeIgniter\Model; 
 
 class Api extends BaseController
 {
-
+   
     public function index()
     {
         $data = array(
@@ -175,8 +175,8 @@ class Api extends BaseController
         $getVar = $this->request->getVar();
         $id = $getVar['id'];
         $parent_id =  $getVar['id'] ? model('Core')->select("parent_id", "pages", " id='$id' and presence = 1 ") : 0;
-        $queryPages   = $this->db->query("SELECT id,parent_id, ilock, name, url, status, idefault, href, sorting FROM pages where parent_id = '$parent_id' and presence = 1 order by sorting ASC ");
-        $queryPagesChild   = $this->db->query("SELECT id,parent_id, ilock, name, url, status, idefault, href, sorting FROM pages where parent_id = '$id' and presence = 1 order by sorting ASC ");
+        $queryPages   = $this->db->query("SELECT id,parent_id,   name, url, status, idefault, href, sorting FROM pages where parent_id = '$parent_id' and presence = 1 order by sorting ASC ");
+        $queryPagesChild   = $this->db->query("SELECT id,parent_id,   name, url, status, idefault, href, sorting FROM pages where parent_id = '$id' and presence = 1 order by sorting ASC ");
 
         $data = [
             "getVar" => $getVar,
@@ -231,6 +231,7 @@ class Api extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
     public function pagesInsertChild()
     {
         $json = file_get_contents('php://input');
@@ -310,7 +311,7 @@ class Api extends BaseController
         $data = [
             "parent" => [
                 "id" => $parend_id,
-                "name" => model("Core")->select("name", "pages", "id= '$parend_id' "),
+                "name" => $parend_id != "0" ? model("Core")->select("name", "pages", "id= '$parend_id' ") :  "- Root -",
             ],
             "item" => count($queryPages->getResult()) ? $queryPages->getResult()[0] : null,
             "themes" => $themes,
@@ -350,4 +351,24 @@ class Api extends BaseController
 
         return $this->response->setJSON($data);
     }
+
+    public function pagesDelete()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+            "post"=>$post,
+        ];
+        if ($post) {
+            $parentId =  $post['id']; // ID parent yang akan dihapus
+            model("Core")->deleteNode($parentId);
+            $data  = [
+                "error" => false,
+            ];
+        }
+        return $this->response->setJSON($data); 
+    }
+
+ 
 }

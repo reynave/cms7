@@ -14,8 +14,8 @@ declare var $: any;
 export class PagesComponent implements OnInit {
   api: string = environment.api;
   pages: any = [];
-  id : string = "";
-  parent_id :  string = "";
+  id: string = "";
+  parent_id: string = "";
   pagesChild: any = [];
   constructor(
     private modalService: NgbModal,
@@ -45,7 +45,7 @@ export class PagesComponent implements OnInit {
         this.pages = data['pages'];
         this.pagesChild = data['pagesChild'];
 
-     //   if(this.parent_id === null) this.parent_id = '0';
+        //   if(this.parent_id === null) this.parent_id = '0';
         console.log(this.parent_id);
         var self = this;
         $(function () {
@@ -82,33 +82,33 @@ export class PagesComponent implements OnInit {
     );
   }
 
-  getChild(id : string) {
+  getChild(id: string) {
     console.log(id);
-   
+
   }
   close() {
     this.modalService.dismissAll();
   }
 
-  fnStatus(status: number, x: any, target : string = "pages") {
+  fnStatus(status: number, x: any, target: string = "pages") {
 
     const data = {
       id: x.id,
       status: status,
     }
 
-    if(target == 'pages'){
+    if (target == 'pages') {
       let objIndex = this.pages.findIndex(((obj: { id: any; }) => obj.id == x.id));
       this.pages[objIndex]['status'] = status.toString();
       console.log(data, objIndex);
     }
-    if(target == 'pagesChild'){
+    if (target == 'pagesChild') {
       let objIndex = this.pagesChild.findIndex(((obj: { id: any; }) => obj.id == x.id));
       this.pagesChild[objIndex]['status'] = status.toString();
       console.log(data, objIndex);
     }
 
-   
+
 
 
     this.http.post<any>(this.api + "pagesUpdateStatus", data, {
@@ -127,10 +127,10 @@ export class PagesComponent implements OnInit {
     )
   }
 
-  pagesSetDefault(id : string){
-  
-    const data= {
-      id :id,
+  pagesSetDefault(id: string) {
+
+    const data = {
+      id: id,
     }
     console.log(data);
     this.http.post<any>(this.api + "pagesSetDefault", data, {
@@ -139,7 +139,7 @@ export class PagesComponent implements OnInit {
         'Token': "123",
       })
     }).subscribe(
-      data => { 
+      data => {
         this.httpGet(this.id);
       },
       e => {
@@ -148,9 +148,9 @@ export class PagesComponent implements OnInit {
     )
   }
 
-  pagesInsertChild(){
-    const data= {
-      id : this.id,
+  pagesInsertChild() {
+    const data = {
+      id: this.id,
     }
     this.http.post<any>(this.api + "pagesInsertChild", data, {
       headers: new HttpHeaders({
@@ -159,7 +159,7 @@ export class PagesComponent implements OnInit {
       })
     }).subscribe(
       data => {
-       
+
         this.httpGet(this.id);
       },
       e => {
@@ -168,9 +168,9 @@ export class PagesComponent implements OnInit {
     )
   }
 
-  pagesInsertParent(){
-    const data= {
-      id : this.id,
+  pagesInsertParent() {
+    const data = {
+      id: this.id,
     }
     this.http.post<any>(this.api + "pagesInsertParent", data, {
       headers: new HttpHeaders({
@@ -179,7 +179,7 @@ export class PagesComponent implements OnInit {
       })
     }).subscribe(
       data => {
-       
+
         this.httpGet(this.id);
       },
       e => {
@@ -188,7 +188,32 @@ export class PagesComponent implements OnInit {
     )
   }
 
-  testVPN(){
+  pagesDelete(id: string) {
+    const data = {
+      id: id,
+    }
+    console.log(data);
+    if (confirm("Delete this Pages "+id+" and all pages's childs ? ")) {
+
+      this.http.post<any>(this.api + "pagesDelete", data, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Token': "123",
+        })
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.httpGet(this.id);
+        },
+        e => {
+          console.log(e);
+        }
+      );
+
+    }
+  }
+
+  testVPN() {
     let url = "https://systemapk.bsfar.com:41021/test.php";
 
     this.http.get<any>(url, {

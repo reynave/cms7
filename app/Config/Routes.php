@@ -43,9 +43,13 @@ $routes->post('api/pagesUpdateStatus', 'Api::pagesUpdateStatus');
 $routes->post('api/pagesInsertChild', 'Api::pagesInsertChild');
 $routes->post('api/pagesInsertParent', 'Api::pagesInsertParent');
 $routes->post('api/pagesSetDefault', 'Api::pagesSetDefault');
-
 $routes->get('api/pagesDetail', 'Api::pagesDetail');
 $routes->post('api/pagesDetailUpdate', 'Api::pagesDetailUpdate');
+$routes->post('api/pagesDelete', 'Api::pagesDelete');
+
+
+$routes->get('api/upload', 'Upload::index');          // Add this line.
+$routes->post('api/upload/uploadImages', 'Upload::uploadImages'); // Add this line.
 
 $routes->get('api/login', 'Api::login');
 $routes->get('config.app', 'Home::config');

@@ -142,5 +142,33 @@ export class PagesDetailComponent implements OnInit {
   back(){
     history.back();
   }
+  httpNote:string = "";
+  fileName = "";
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.httpNote = "Upload..";
+      console.log(file);
+      this.fileName = file.name;
+      const formData = new FormData();
+      
+      formData.append("userfile", file);
+      formData.append("id",this.id );
+      formData.append("table", "pages");  
+      formData.append("token", "123");
+      const upload$ = this.http.post(environment.api + "/upload/uploadImages", formData);
+      upload$.subscribe(
+        data => {
+          console.log(data);
+          this.httpNote = "";
+          this.httpGet();
+        },
+        e => {
+          this.httpNote = "Upload error!";
+          console.log(e)
+        });
+    }
+  }
+
 
 }
