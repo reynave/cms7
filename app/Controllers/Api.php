@@ -3,11 +3,11 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\Model; 
+use CodeIgniter\Model;
 
 class Api extends BaseController
 {
-   
+
     public function index()
     {
         $data = array(
@@ -358,7 +358,7 @@ class Api extends BaseController
         $post = json_decode($json, true);
         $data  = [
             "error" => true,
-            "post"=>$post,
+            "post" => $post,
         ];
         if ($post) {
             $parentId =  $post['id']; // ID parent yang akan dihapus
@@ -367,8 +367,94 @@ class Api extends BaseController
                 "error" => false,
             ];
         }
-        return $this->response->setJSON($data); 
+        return $this->response->setJSON($data);
     }
 
- 
+
+
+    public function widget()
+    {
+        $getVar = $this->request->getVar();
+        $widget   = $this->db->query("SELECT section ,themes, COUNT(id) AS 'total'
+        FROM widget WHERE presence = 1 AND themes != ''
+        GROUP By section, themes
+        ORDER BY section ASC ");
+
+        $data = [
+            "getVar" => $getVar,
+            "items" => $widget->getResult(),
+        ];
+
+
+        return $this->response->setJSON($data);
+    }
+
+    public function widgetSection($section = "")
+    {
+        $getVar = $this->request->getVar();
+        $widget   = $this->db->query("SELECT id, itype, themes, h1, img, sorting
+        FROM widget WHERE presence = 1 AND section = '$section' 
+        ORDER BY sorting ASC ");
+
+        $data = [
+            "section" => $section,
+            "getVar" => $getVar,
+            "items" => $widget->getResult(),
+        ];
+
+
+        return $this->response->setJSON($data);
+    }
+
+    public function widgetUpdateSorting()
+    {
+        $data = [
+            "post" => $this->request->getVar(),
+            "Token" => $this->request->getHeaderLine("Token")
+        ];
+        $i = 1;
+        foreach ($this->request->getVar() as $row) {
+            $this->db->table("widget")->update([
+                "sorting" => $i++,
+                "update_date" => date("Y-m-d H:i:s")
+            ], "id = '" . $row . "' ");
+        }
+        return $this->response->setJSON($data);
+    }
+
+    public function widgetDetail($id = 0)
+    {
+        $getVar = $this->request->getVar();
+        $widget   = $this->db->query("SELECT * FROM widget WHERE presence = 1 AND id = '$id' ");
+
+        $data = [ 
+            "items" => $widget->getResult()[0],
+        ];
+        return $this->response->setJSON($data);
+        
+    }
+    public function widgetUpdateDetail()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+        ];
+        if ($post) {
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];  
+            $this->db->table("widget")->update([
+                "h1" => $post['model']['h1'],
+                "h2" => $post['model']['h2'],
+                "h3" => $post['model']['h3'],
+                "h4" => $post['model']['h4'],
+                "h5" => $post['model']['h5'],
+                "h6" => $post['model']['h6'],
+                "update_date" => date("Y-m-d H:i:s")
+            ], "id = '" . $post['id'] . "' "); 
+            return $this->response->setJSON($data);
+        }
+    }
 }

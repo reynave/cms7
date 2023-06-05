@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title"><strong>Pages Detail</strong></div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-12">
+            <a (click)="back()">Back</a>
+        </div>
+        <div class="col-6">
+            <div class="mb-2" [hidden]="!label.h1">
+                <label>Headline 1</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h1">
+            </div>
+
+            <div class="mb-2" [hidden]="!label.h2">
+                <label>Headline 2</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h2">
+            </div>
+
+            <div class="mb-2" [hidden]="!label.h3">
+                <label>Headiing 3</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h3">
+            </div>
+            <div class="mb-2" [hidden]="!label.h4">
+                <label>Headline 4</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h4">
+            </div>
+
+            <div class="mb-2">
+                <label>Headline 5</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h5">
+            </div>
+
+            <div class="mb-2">
+                <label>Headiing 6</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h6">
+            </div>
+            {{model | json}}
+        </div>
+
+        <div class="col-6">
+            img
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    {{loading}}
+    <button type="button" class="btn btn-sm btn-primary mx-1" (click)="update()">Update</button>
+    <button type="button" class="btn btn-sm btn-outline-dark" (click)="close()">Close</button>
+</div>

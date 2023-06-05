@@ -12,6 +12,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PagesComponent } from './pages/pages.component';
 import { PagesDetailComponent } from './pages/pages-detail/pages-detail.component';
 import { WidgetComponent } from './widget/widget.component';
+import { WidgetSectionComponent } from './widget/widget-section/widget-section.component';
+import { WidgetDetailComponent } from './widget/widget-detail/widget-detail.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { WidgetComponent } from './widget/widget.component';
     NotfoundComponent,
     PagesComponent,
     PagesDetailComponent,
-    WidgetComponent
+    WidgetComponent,
+    WidgetSectionComponent,
+    WidgetDetailComponent
   ],
   imports: [
     BrowserModule,

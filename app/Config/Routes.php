@@ -47,6 +47,13 @@ $routes->get('api/pagesDetail', 'Api::pagesDetail');
 $routes->post('api/pagesDetailUpdate', 'Api::pagesDetailUpdate');
 $routes->post('api/pagesDelete', 'Api::pagesDelete');
 
+$routes->get('api/widget', 'Api::widget');
+$routes->get('api/widget/section/(:any)', 'Api::widgetSection/$1');
+$routes->post('api/widget/update/sorting', 'Api::widgetUpdateSorting');
+
+$routes->get('api/widget/detail/(:any)', 'Api::widgetDetail/$1');
+$routes->post('api/widget/update/detail', 'Api::widgetUpdateDetail');
+ 
 
 $routes->get('api/upload', 'Upload::index');          // Add this line.
 $routes->post('api/upload/uploadImages', 'Upload::uploadImages'); // Add this line.

@@ -1,1 +1,31 @@
-<p>widget works!</p>
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title"><strong>Widget</strong></div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-ms table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Section</th>
+                        <th>For Themes</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    <tr *ngFor="let x of items; let i = index" [routerLink]="[ '/widget',x.section ]">
+                        <td>{{i+1}}</td> 
+                        <td>{{x.section}}</td>
+                        <td>{{x.themes}}</td>
+                        <td>{{x.total | number}}</td> 
+                    </tr> 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>
+</div>

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { ServiceService } from 'src/app/service/service.service';
 
 
 declare var $: any;
@@ -20,22 +21,20 @@ export class PagesComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private service: ServiceService,
+    
   ) {
   }
 
   ngOnInit() {
     this.httpGet(this.route.snapshot.queryParams['id']);
-
   }
 
   httpGet(id: string) {
 
     this.http.get<any>(this.api + "getPages", {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      }),
+      headers: this.service.httpHeaders(),
       params: { id: id }
     }).subscribe(
       data => {
@@ -59,10 +58,7 @@ export class PagesComponent implements OnInit {
               });
               console.log(order);
               self.http.post(self.api + "pagesUpdateSorting", order, {
-                headers: new HttpHeaders({
-                  'Content-Type': 'application/json',
-                  'Token': "123",
-                })
+                headers: self.service.httpHeaders(),
               }).subscribe(
                 data => {
                   console.log(data);
@@ -86,6 +82,7 @@ export class PagesComponent implements OnInit {
     console.log(id);
 
   }
+
   close() {
     this.modalService.dismissAll();
   }
@@ -112,10 +109,7 @@ export class PagesComponent implements OnInit {
 
 
     this.http.post<any>(this.api + "pagesUpdateStatus", data, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      })
+      headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
         console.log(data);
@@ -134,10 +128,7 @@ export class PagesComponent implements OnInit {
     }
     console.log(data);
     this.http.post<any>(this.api + "pagesSetDefault", data, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      })
+      headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
         this.httpGet(this.id);
@@ -153,10 +144,7 @@ export class PagesComponent implements OnInit {
       id: this.id,
     }
     this.http.post<any>(this.api + "pagesInsertChild", data, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      })
+      headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
 
@@ -173,10 +161,7 @@ export class PagesComponent implements OnInit {
       id: this.id,
     }
     this.http.post<any>(this.api + "pagesInsertParent", data, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      })
+      headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
 
@@ -196,10 +181,7 @@ export class PagesComponent implements OnInit {
     if (confirm("Delete this Pages "+id+" and all pages's childs ? ")) {
 
       this.http.post<any>(this.api + "pagesDelete", data, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Token': "123",
-        })
+        headers: this.service.httpHeaders(),
       }).subscribe(
         data => {
           console.log(data);
@@ -217,10 +199,7 @@ export class PagesComponent implements OnInit {
     let url = "https://systemapk.bsfar.com:41021/test.php";
 
     this.http.get<any>(url, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Token': "123",
-      })
+      headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
         console.log(data);

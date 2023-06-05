@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title"><strong>Pages Detail</strong></div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body">
+
+    <div class="row g-1 sortable">
+        <div class="col-2 " *ngFor="let x of items">
+            <div class="p-1">
+                <img src="https://dummyimage.com/400x400/dde6ed/526d82&text={{x.h1}}-{{x.id}}" class="w-100 handle" data-id="{{x.id}}">
+                <div class="text-center">
+                    <a [routerLink]="[ '/widget/detail',x.id]"><small>Detail</small></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>
+</div>
