@@ -14,6 +14,7 @@ import { PagesDetailComponent } from './pages/pages-detail/pages-detail.componen
 import { WidgetComponent } from './widget/widget.component';
 import { WidgetSectionComponent } from './widget/widget-section/widget-section.component';
 import { WidgetDetailComponent } from './widget/widget-detail/widget-detail.component';
+import { EmbedComponent } from './setting/embed/embed.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { WidgetDetailComponent } from './widget/widget-detail/widget-detail.comp
     PagesDetailComponent,
     WidgetComponent,
     WidgetSectionComponent,
-    WidgetDetailComponent
+    WidgetDetailComponent,
+    EmbedComponent
   ],
   imports: [
     BrowserModule,

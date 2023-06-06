@@ -14,7 +14,9 @@ declare var $: any;
 export class WidgetSectionComponent {
   api: string = environment.api;
   items: any = [];
-  section : string = "";
+  section: string = "";
+  deleteEnable: boolean = false;
+
   constructor(
     private modalService: NgbModal,
     private http: HttpClient,
@@ -23,14 +25,14 @@ export class WidgetSectionComponent {
   ) {
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.section = this.route.snapshot.params['section'];
-    this.httpGet(); 
+    this.httpGet();
   }
 
   httpGet() {
-    console.log(this.api + "widget/section/"+this.section);
-    this.http.get<any>(this.api + "widget/section/"+this.section, {
+    this.checkBoxAll = false; 
+    this.http.get<any>(this.api + "widget/section/" + this.section, {
       headers: this.service.httpHeaders(),
     }).subscribe(
       data => {
@@ -68,6 +70,74 @@ export class WidgetSectionComponent {
       },
     );
   }
+  
+  addWdiget() {
+    const body = {
+      section: this.section,
+    }
+    this.http.post(this.api + "widget/insert", body, {
+      headers: this.service.httpHeaders()
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      }
+    );
+  }
+
+  deleteWidgetCheck() {
+    const body = {
+      section: this.section,
+      items: this.items,
+    }
+    console.log(body);
+    this.http.post(this.api + "widget/delete", body, {
+      headers: this.service.httpHeaders()
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      }
+    );
+  }
+
+  checkBoxAll: boolean = false;
+  fnCheckboxAll() {
+    if (this.checkBoxAll == true) {
+      this.items.forEach((el: any) => {
+        el['checkbox'] = true;
+        this.deleteEnable = true;
+      });
+    } else {
+      this.items.forEach((el: any) => {
+        el['checkbox'] = false;
+      });
+      this.deleteEnable = false;
+    }
+  
+  }
+  fnCheckbox() {
+    let i = 0;
+    this.items.forEach((el: any) => {
+      if (el['checkbox'] == true) {
+        i++;
+      }
+    });
+    if (i > 0) {
+      this.deleteEnable = true;
+    } else {
+      this.deleteEnable = false;
+    }
+    
+  }
+
+
   close() {
     this.modalService.dismissAll();
   }

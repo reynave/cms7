@@ -8,6 +8,7 @@ import { PagesDetailComponent } from './pages/pages-detail/pages-detail.componen
 import { WidgetComponent } from './widget/widget.component';
 import { WidgetSectionComponent } from './widget/widget-section/widget-section.component';
 import { WidgetDetailComponent } from './widget/widget-detail/widget-detail.component';
+import { EmbedComponent } from './setting/embed/embed.component';
 
 const routes: Routes = [
  // { path: "", component: HomeComponent, data: { active: "home" }, },
@@ -20,6 +21,8 @@ const routes: Routes = [
   { path: "widget", component: WidgetComponent, data: { active: "widget" }, },
   { path: "widget/:section", component: WidgetSectionComponent, data: { active: "widget" }, },
   { path: "widget/detail/:id", component: WidgetDetailComponent, data: { active: "widget" }, },
+  
+  { path: "setting/embed", component: EmbedComponent, data: { active: "setting" }, },
   
 
   { path: "forbiden", component: NotfoundComponent, data: { active: "home" }, },

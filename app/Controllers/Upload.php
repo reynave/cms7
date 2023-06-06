@@ -17,7 +17,38 @@ class Upload extends BaseController
         );
         return $this->response->setJSON($data);
     }
-  
+    function removeImages()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($data) {
+            $img = model("Core")->select("img", "widget", "id=" . $data['post']['id']);
+
+            $img = explode("/",$img);
+            $img = end($img); 
+            if (file_exists('./uploads/' . $data['post']['table'] . '/' . $img)) {
+                unlink('./uploads/' . $data['post']['table'] . '/' . $img);
+            }
+            if (file_exists('./uploads/thumbs/' . $img)) {
+                unlink('./uploads/thumbs/' . $img);
+            }
+            $this->db->table($data['post']['table'])->update([
+                "img"    => "",
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $data['post']['id'] . "' ");
+
+            $data  = [
+                "error" => false,
+                "post" => $post,
+                "img" =>  $img,
+            ];
+        }
+        return $this->response->setJSON($data);
+    }
     function uploadImages()
     {
         $data = array(
@@ -41,42 +72,52 @@ class Upload extends BaseController
                 $data = [
                     'errors' => $this->validator->getErrors(),
                     "post" => $this->request->getVar(),
-                ];  
+                ];
             }
 
             $file = $this->request->getFile('userfile');
 
             if (!$file->hasMoved()) {
                 $overwrite = false;
-                if( file_exists('./uploads/'.$data['post']['table'].'/'.$file->getName() ) ){
+                if (file_exists('./uploads/' . $data['post']['table'] . '/' . $file->getName())) {
                     $overwrite = true;
-                    unlink('./uploads/'.$data['post']['table'].'/'.$file->getName());
+                    unlink('./uploads/' . $data['post']['table'] . '/' . $file->getName());
                 }
 
-                $file->move( './uploads/'.$data['post']['table']); 
+                $file->move('./uploads/' . $data['post']['table']);
                 $data = [
                     "overwrite" => $overwrite,
                     "name" => $file->getName(),
-                    "filepath" => $file, 
+                    "filepath" => $file,
                     "post" => $this->request->getVar(),
-                ]; 
+                ];
 
-                $this->db->table("pages")->update([ 
-                    "img"    => base_url(). 'uploads/'.$data['post']['table'].'/'.$file->getName(), 
+                 // call : http://localhost/website/cms7/public/thumb.app
+                $image = \Config\Services::image();
+
+                $path = './uploads/'.$data['post']['table'].'/'.$file->getName();
+                $pathSave = './uploads/thumbs/'.$file->getName();
+                $w = 200;
+                $h = 200; 
+                if (!file_exists($pathSave)) { 
+                    $image->withFile($path)
+                        ->fit($w, $h, 'center')
+                        ->save($pathSave);
+                }
+
+
+                $this->db->table($data['post']['table'])->update([ 
+                    "img"    => base_url() . 'uploads/' . $data['post']['table'] . '/' . $file->getName(),
                     "update_date" => date("Y-m-d H:i:s"),
                 ], "id = '" . $data['post']['id'] . "' ");
-
-            }else{
+            } else {
                 $data = [
                     'errors' =>  'The file has already been moved.',
                     "post" => $this->request->getVar(),
                 ];
             }
-
-           
         }
 
         return $this->response->setJSON($data);
     }
-
 }

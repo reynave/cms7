@@ -6,9 +6,10 @@
 
     <div class="row">
         <div class="col-12">
-            <a (click)="back()">Back</a>
+            <a (click)="back()">Back</a> 
         </div>
-        <div class="col-6">
+       
+        <div class="col-6" [hidden]="!presence">
             <div class="mb-2" [hidden]="!label.h1">
                 <label>Headline 1</label>
                 <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h1">
@@ -37,17 +38,35 @@
                 <label>Headiing 6</label>
                 <input type="text" class="form-control form-control-sm" [(ngModel)]="model.h6">
             </div>
-            {{model | json}}
+
+
         </div>
 
-        <div class="col-6">
-            img
+        <div class="col-6" [hidden]="!presence">
+            <div class="mb-2">
+                <label>Href</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="model.href" placeholder="https://">
+            </div>
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col"><label for="img" class="form-label">Images {{httpNote}}</label></div>
+                    <div class="col text-end"><a href="javascript:;" class="text-danger" (click)="rmImages()">Remove Images</a></div>
+                </div>
+                <div [hidden]="!this.model.img">
+                    <img [src]="this.model.img" class="border p-1 bg-light w-100 mb-1">
+                </div>
+
+                <input type="file" class="form-control form-control-sm mb-1" (change)="onFileSelected($event)">
+
+                <input type="text" id="img" class="form-control form-control-sm" id="img" [(ngModel)]="model.img" name="img" #img="ngModel" placeholder="Url Images">
+
+            </div>
         </div>
     </div>
 
 </div>
 <div class="modal-footer">
-    {{loading}}
+    <span [hidden]="!loading">Loading...</span>
     <button type="button" class="btn btn-sm btn-primary mx-1" (click)="update()">Update</button>
     <button type="button" class="btn btn-sm btn-outline-dark" (click)="close()">Close</button>
 </div>

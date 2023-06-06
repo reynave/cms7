@@ -53,10 +53,16 @@ $routes->post('api/widget/update/sorting', 'Api::widgetUpdateSorting');
 
 $routes->get('api/widget/detail/(:any)', 'Api::widgetDetail/$1');
 $routes->post('api/widget/update/detail', 'Api::widgetUpdateDetail');
+$routes->post('api/widget/insert', 'Api::widgetInsert');
+$routes->post('api/widget/delete', 'Api::widgetDelete');
  
+$routes->get('api/upload', 'Upload::index');  
+$routes->post('api/upload/uploadImages', 'Upload::uploadImages');  
+$routes->post('api/upload/removeImages', 'Upload::removeImages'); 
 
-$routes->get('api/upload', 'Upload::index');          // Add this line.
-$routes->post('api/upload/uploadImages', 'Upload::uploadImages'); // Add this line.
+$routes->get('api/setting', 'Api::setting'); 
+$routes->post('api/setting/update', 'Api::settingUpdate'); 
+
 
 $routes->get('api/login', 'Api::login');
 $routes->get('config.app', 'Home::config');

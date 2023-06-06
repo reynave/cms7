@@ -81,9 +81,11 @@
                     <div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <a [routerLink]="[ '/home' ]" (click)="open(content)" data-bs-dismiss="offcanvas">Header Code</a> 
+                                <a [routerLink]="[ '/setting/embed' ]" (click)="open(content)" data-bs-dismiss="offcanvas">Header Code</a> 
                             </li>
-                            <li class="list-group-item">Embed Code</li>
+                            <li class="list-group-item">
+                                <a [routerLink]="[ '/setting/embed' ]" (click)="open(content)" data-bs-dismiss="offcanvas">Embed Code</a> 
+                            </li>
                             <li class="list-group-item">File Manager</li>
                             <li class="list-group-item">User Account</li>
                            
@@ -107,18 +109,18 @@
 
 <ng-template #content let-modal>
 	 
-		<!-- <router-outlet></router-outlet> -->
+		 <!-- <router-outlet></router-outlet>  -->
 	 
 </ng-template>
 
 
-<div class="container">
+ <div class="container">
     <div class="row">
         <div class="col-12">
             <router-outlet></router-outlet>
         </div>
     </div>
-</div>
+</div> 
 
 <!-- <iframe [src]="urlSafe" class="border-top" height="900" width="100%"> </iframe> -->
 

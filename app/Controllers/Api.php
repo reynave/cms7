@@ -395,11 +395,37 @@ class Api extends BaseController
         $widget   = $this->db->query("SELECT id, itype, themes, h1, img, sorting
         FROM widget WHERE presence = 1 AND section = '$section' 
         ORDER BY sorting ASC ");
+        $items = [];
+
+        foreach ($widget->getResultArray() as $row) {
+            $img = $row['img'] ? explode("/", $row['img']) : [];
+            //? base_url()."public/upload/thumbs/".end($img) : "https://dummyimage.com/400x400/dde6ed/526d82&text=123",
+            $img = ($img == null) ? "https://dummyimage.com/400x400/dde6ed/526d82&text=W-" . $row['id'] : base_url() . "uploads/thumbs/" . end($img);
+ 
+
+            $imgLocal = explode("/", $row['img']);
+            $imgLocal = end($imgLocal); 
+        
+            if (!file_exists('./uploads/thumbs/' . $imgLocal)) {
+               $img = $row['img'];  
+            }
+
+            $temp = [
+                "id"        => $row['id'],
+                "itype"     => $row['itype'],
+                "themes"    => $row['themes'],
+                "h1"        => $row['h1'],
+                "checkbox"  => "",
+                "img"       => $img,
+                "sorting"   => $row['sorting'],
+            ];
+            array_push($items, $temp);
+        }
 
         $data = [
             "section" => $section,
             "getVar" => $getVar,
-            "items" => $widget->getResult(),
+            "items" => $items,
         ];
 
 
@@ -427,12 +453,12 @@ class Api extends BaseController
         $getVar = $this->request->getVar();
         $widget   = $this->db->query("SELECT * FROM widget WHERE presence = 1 AND id = '$id' ");
 
-        $data = [ 
-            "items" => $widget->getResult()[0],
+        $data = [
+            "items" =>   $widget->getResult() ? $widget->getResult()[0] : null,
         ];
         return $this->response->setJSON($data);
-        
     }
+
     public function widgetUpdateDetail()
     {
         $json = file_get_contents('php://input');
@@ -444,7 +470,7 @@ class Api extends BaseController
             $data = [
                 "error" => false,
                 "post" => $post,
-            ];  
+            ];
             $this->db->table("widget")->update([
                 "h1" => $post['model']['h1'],
                 "h2" => $post['model']['h2'],
@@ -452,9 +478,79 @@ class Api extends BaseController
                 "h4" => $post['model']['h4'],
                 "h5" => $post['model']['h5'],
                 "h6" => $post['model']['h6'],
+                "img" => $post['model']['img'],
+                "href" => $post['model']['href'],
                 "update_date" => date("Y-m-d H:i:s")
-            ], "id = '" . $post['id'] . "' "); 
+            ], "id = '" . $post['id'] . "' ");
             return $this->response->setJSON($data);
         }
+    }
+
+    public function widgetInsert()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("widget")->insert([
+                "section" => $post['section'],
+                "sorting" => 999,
+                "h1" => "H1 " . date("ymdHis"),
+                "update_date" => date("Y-m-d H:i:s"),
+                "input_date" => date("Y-m-d H:i:s"),
+            ]);
+        }
+        return $this->response->setJSON($data);
+    }
+
+    public function widgetDelete()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['items'] as $row) {
+                if ($row['checkbox'] == "true") {
+                    $this->db->table("widget")->update([
+                        "presence" => 0,
+                        "update_date" => date("Y-m-d H:i:s"),
+                    ], "id = '" . $row['id'] . "' ");
+                }
+            }
+        }
+        return $this->response->setJSON($data);
+    }
+
+
+    public function setting()
+    {
+        $data = [
+            "value" => base64_encode( model("Core")->select("value", "setting", " id = 1 ") ),  
+        ];
+        return $this->response->setJSON($data); 
+    }
+    
+    public function settingUpdate()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data  = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) { 
+            $this->db->table("setting")->update([
+                "value" => base64_decode( $post['value']),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = ". $post['id']);
+             
+        }
+        return $this->response->setJSON($data);
     }
 }
